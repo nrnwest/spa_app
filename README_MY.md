@@ -17,7 +17,9 @@
    apt-get update
    curl -sL https://deb.nodesource.com/setup_18.x | bash
     apt-get install -y nodejs
-    npm install 
+   (Кода проект выкачан с гита тоесть создан то только запускеам две команды)
+    npm install  
+    npm run build
 5. После запуска dev вискочила ошибка обновляем пакет: npm install -g npm@9.1.2
    И потом выполняем внеся измения в шаблоны vue мы должны запустить команду
    npm run build

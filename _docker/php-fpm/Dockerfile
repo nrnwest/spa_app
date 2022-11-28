@@ -1,41 +1,45 @@
-FROM phpdockerio/php:8.1-fpm
-WORKDIR "/application"
+FROM php:8.1.0-fpm-alpine
 
-RUN apt-get update && apt-get install -y \
-      apt-utils \
-      libpq-dev \
-      libpng-dev \
-      libzip-dev \
-      zip unzip \
-      curl \
-      git && \
-      docker-php-ext-install pdo_mysql && \
-      docker-php-ext-install bcmath && \
-      docker-php-ext-install gd && \
-      docker-php-ext-install zip && \
-      apt-get clean && \
-      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-RUN apt-get update; \
-      apt-get -y --no-install-recommends install \
-      php8.1-xdebug \
-      php8.1-mysql \
-      php8.1-redis \
-      php8.1-ds \
-      php8.1-bcmath\
-      php8.1-xmlrpc \
-      php8.1-xsl \
-      php8.1-xmlwriter \
-      php8.1-xml \
-      php8.1-tokenizer \
-      php8.1-mbstring \
-      php8.1-dom \
-      php8.1-yac \
-      php8.1-dom \
-      php8.1-yaml; \
-      apt-get clean; \
-      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-# Install composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN curl -sS https://getcomposer.org/installer | php -- \
-    --filename=composer \
-    --install-dir=/usr/local/bin \
+# Install packages
+RUN apk add --no-cache git curl build-base zlib-dev oniguruma-dev autoconf bash
+
+# Xdebug
+ARG INSTALL_XDEBUG=false
+RUN if [ ${INSTALL_XDEBUG} = true ]; \
+    then \
+      pecl install xdebug && docker-php-ext-enable xdebug; \
+    fi;
+
+COPY ./docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Postgres && Mysql
+RUN apk add --no-cache libpq-dev && docker-php-ext-install pdo_pgsql && docker-php-ext-install pdo_mysql
+
+# node js
+RUN apk add --update nodejs npm
+RUN apk add --update npm
+
+
+# Configure non-root user.
+ARG PUID=1000
+ARG PGID=1000
+RUN apk --no-cache add shadow && \
+    groupmod -o -g ${PGID} www-data && \
+    usermod -o -u ${PUID} -g www-data www-data
+
+
+# Source code
+RUN chown www-data:www-data /var/www
+COPY --chown=www-data:www-data ./ /var/www
+WORKDIR /var/www
+
+USER www-data
+
+# Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# remove # comment on the writing project:
+RUN composer install --no-interaction
+
+CMD php-fpm
+
+EXPOSE 9000
