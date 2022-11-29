@@ -60,7 +60,7 @@ npm:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
 
 pause:
-	sleep 30
+	sleep 60
 
 pause5:
 	sleep 5
