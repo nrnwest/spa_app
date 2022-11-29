@@ -4,6 +4,7 @@
 
 DOCKER_COMPOSE = docker-compose -f ./_docker/docker-compose.yml --env-file ./_docker/.env
 DOCKER_COMPOSE_PHP_FPM_EXEC = ${DOCKER_COMPOSE} exec -u www-data php-fpm
+WELCOME = Welcome	http://localhost:8888 phpMyAdmin	http://localhost:4444
 
 ##################
 # Docker compose
@@ -87,7 +88,7 @@ cs_fix_diff:
 #  Deployment
 #################
 dep:
-	make build pause5 up pause4 composer npm pause60 db_migrate
+	make build pause5 up pause4 composer npm pause60 db_migrate wprint
 
 #################
 # pause
@@ -101,3 +102,6 @@ pause5:
 
 pause4:
 	sleep 4
+
+wprint:
+	@echo ${WELCOME} "\r\n\r\n"
