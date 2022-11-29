@@ -40,27 +40,28 @@ restart:
 
 php:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm bash
+
+# all tests
 test:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm php bin/phpunit
-jwt:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm php bin/console lexik:jwt:generate-keypair
-cache:
-	docker-compose -f ./_docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
-	docker-compose -f ./_docker/docker-compose.yml exec -u www-data php-fpm bin/console cache:clear --env=test
-nodejs:
+	${DOCKER_COMPOSE} exec -u www-data php-fpm php vendor/bin/phpunit
+
+# Unit test
+test_u:
+	${DOCKER_COMPOSE} exec -u www-data php-fpm php vendor/bin/phpunit ./tests/Unit
+
+node:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm curl -sL https://deb.nodesource.com/setup_18.x | bash
+
+npm:
+	${DOCKER_COMPOSE} exec -u www-data php-fpm npm install
+	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
 
 ##################
 # Database
 ##################
 
 db_migrate:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm bin/console doctrine:migrations:migrate --no-interaction
-db_diff:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm bin/console doctrine:migrations:diff --no-interaction
-db_drop:
-	docker-compose -f ./_docker/docker-compose.yml exec -u www-data php-fpm bin/console doctrine:schema:drop --force
-
+	${DOCKER_COMPOSE_PHP_FPM_EXEC} php artisan migrate
 
 ##################
 # Static code analysis
@@ -78,3 +79,9 @@ cs_fix:
 
 cs_fix_diff:
 	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/php-cs-fixer fix --dry-run --diff
+
+##########
+# Start
+#########
+start:
+	make build up npm

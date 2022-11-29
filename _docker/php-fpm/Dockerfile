@@ -10,7 +10,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; \
       pecl install xdebug && docker-php-ext-enable xdebug; \
     fi;
 
-COPY ./docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./_docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Postgres && Mysql
 RUN apk add --no-cache libpq-dev && docker-php-ext-install pdo_pgsql && docker-php-ext-install pdo_mysql
@@ -38,7 +38,11 @@ USER www-data
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # remove # comment on the writing project:
-RUN composer install --no-interaction
+#RUN composer install --no-interaction
+
+# build node
+RUN npm install
+RUN npm run build
 
 CMD php-fpm
 

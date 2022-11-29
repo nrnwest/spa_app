@@ -1,27 +1,24 @@
-### SPA Application base
+### SPA Application 
+The project needs to be pinked on a Linux or Windows (wsl2) platform.
+Docker must be installed
+## Deployment
 
-
-### Deployment
 ```bash
-git clone 
+git clone https://github.com/nrnwest/spa_app.git
+
 ```
 ```bash
-docker-compose up -d --build
-
-docker-compose exec app chown -R www-data:www-data /application/public /application/storage
+make start
 
 ````
-```bash
-docker exec -it dzen_app bash
-
-composer install
-```
 
 ### Website
-[localhost:4000](http://localhost:4000)
+[localhost:8888](http://localhost:8888)
 
 
 ### phpMyAdmin
+user root 
+password root
 [localhost:4444](http://localhost:4444)
 
 
