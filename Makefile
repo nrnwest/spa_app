@@ -59,6 +59,9 @@ npm:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm install
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
 
+pause:
+	sleep 60
+
 ##################
 # Database
 ##################
@@ -87,4 +90,4 @@ cs_fix_diff:
 #  Deployment
 #########
 dep:
-	make build up composer npm db_migrate
+	make build up composer npm pause db_migrate
