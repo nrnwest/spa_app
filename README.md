@@ -1,7 +1,12 @@
-### SPA Application 
-The project needs to be pinked on a Linux or Windows (wsl2) platform.
+### SPA Application Laravel+Vue
+The project needs to be pinked on a Linux or Windows (wsl2 Unbuntu 20.04) platform.
 Docker must be installed
 ## Deployment
+
+```bash
+git clone https://github.com/nrnwest/spa_app.git
+```
+
 Rename the two files,
 and add your settings if needed, the default settings don't need to be changed.
 
@@ -9,11 +14,7 @@ and add your settings if needed, the default settings don't need to be changed.
 2. .env.dist to .env
 
 ```bash
-git clone https://github.com/nrnwest/spa_app.git
-```
-```bash
-make start
-
+make dep
 ````
 
 ### Website
@@ -21,7 +22,7 @@ make start
 
 
 ### phpMyAdmin
-user root 
+user root
 password root
 [localhost:4444](http://localhost:4444)
 

@@ -52,6 +52,9 @@ test_u:
 node:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm curl -sL https://deb.nodesource.com/setup_18.x | bash
 
+composer:
+	${DOCKER_COMPOSE} exec -u www-data php-fpm composer install
+
 npm:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm install
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
@@ -81,7 +84,7 @@ cs_fix_diff:
 	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/php-cs-fixer fix --dry-run --diff
 
 ##########
-# Start
+#  Deployment
 #########
-start:
-	make build up npm
+dep:
+	make build up composer npm db_migrate
