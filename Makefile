@@ -62,6 +62,9 @@ npm:
 pause:
 	sleep 60
 
+pause5:
+	sleep 5
+
 ##################
 # Database
 ##################
@@ -90,4 +93,4 @@ cs_fix_diff:
 #  Deployment
 #########
 dep:
-	make build up composer npm pause db_migrate
+	make build pause5 up pause5 composer npm pause db_migrate

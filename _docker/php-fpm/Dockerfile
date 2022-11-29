@@ -37,12 +37,6 @@ USER www-data
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-# remove # comment on the writing project:
-#RUN composer install --no-interaction
-
-# build node
-RUN npm install
-RUN npm run build
 
 CMD php-fpm
 
