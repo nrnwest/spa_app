@@ -2,10 +2,14 @@
 The project needs to be pinked on a Linux or Windows (wsl2) platform.
 Docker must be installed
 ## Deployment
+Rename the two files,
+and add your settings if needed, the default settings don't need to be changed.
+
+1. _docker/.env.dist to .env
+2. .env.dist to .env
 
 ```bash
 git clone https://github.com/nrnwest/spa_app.git
-
 ```
 ```bash
 make start
