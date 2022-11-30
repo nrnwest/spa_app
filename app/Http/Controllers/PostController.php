@@ -26,15 +26,15 @@ class PostController extends Controller
         return inertia('Post/Edit', compact('post'));
     }
 
-    public function create()
-    {
-        return inertia('Post/Create');
-    }
-
     public function store(StoreRequest $request)
     {
         Post::create($request->validated());
         return redirect()->route('post.index');
+    }
+
+    public function create()
+    {
+        return inertia('Post/Create');
     }
 
     public function update(Post $post, UpdateRequest $request)
