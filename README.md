@@ -17,12 +17,12 @@ and add your settings if needed, the default settings don't need to be changed.
 make dep
 ````
 ### Website
-[localhost:8888](http://localhost:8888)
+<http://localhost:8888>
 
 ### phpMyAdmin
 user root
 password root
-[localhost:4444](http://localhost:4444)
+<http://localhost:4444>
 
 ###  Installing the local version to be developed once on a laconic machine
 ```bash 

@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
-use App\Http\Resources\Post\PostResuorce;
 use App\Models\Post;
+use App\Service\PostService;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(PostService $appService)
     {
-        $posts = Post::all();
-        $posts = PostResuorce::collection($posts)->resolve();
+        $posts = $appService->getPosts();
         return inertia('Post/Index', compact('posts'));
     }
 
@@ -26,9 +27,9 @@ class PostController extends Controller
         return inertia('Post/Edit', compact('post'));
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, PostService $postService)
     {
-        Post::create($request->validated());
+        $postService->createPost($request->validated());
         return redirect()->route('post.index');
     }
 
@@ -37,15 +38,15 @@ class PostController extends Controller
         return inertia('Post/Create');
     }
 
-    public function update(Post $post, UpdateRequest $request)
+    public function update(Post $post, UpdateRequest $request, PostService $postService)
     {
-        $post->update($request->validated());
+        $postService->updatePost($post, $request->validated());
         return redirect()->route('post.index');
     }
 
-    public function delete(Post $post)
+    public function delete(Post $post, PostService $postService)
     {
-        $post->delete();
+        $postService->deletePost($post);
         return redirect()->route('post.index');
     }
 }
