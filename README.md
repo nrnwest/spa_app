@@ -23,3 +23,8 @@ make dep
 user root
 password root
 [localhost:4444](http://localhost:4444)
+
+###  Installing the local version to be developed once on a laconic machine
+```bash 
+make npm_local
+```

@@ -60,6 +60,15 @@ npm:
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm install
 	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
 
+npmd:
+	npm run dev
+
+# Installing the local version to be developed once on a laconic machine
+npm_local:
+	sudo curl -s https://deb.nodesource.com/setup_16.x | sudo bash
+	sudo apt-get install -y nodejs
+	sudo npm install -g npm@9.1.3
+
 ##################
 # Database
 ##################
