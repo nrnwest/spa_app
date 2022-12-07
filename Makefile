@@ -3,8 +3,11 @@
 ##################
 
 DOCKER_COMPOSE = docker-compose -f ./_docker/docker-compose.yml --env-file ./_docker/.env
-DOCKER_COMPOSE_PHP_FPM_EXEC = ${DOCKER_COMPOSE} exec -u www-data php-fpm
-WELCOME = Welcome	"\n\n" http://localhost:8888 phpMyAdmin	http://localhost:4444 "\n\n"
+DOCKER_COMPOSE_EXEC = exec -u www-data php-fpm
+
+PRINT_SEPARATOR = "\n\n"
+PRINT_WELCOME = Welcome: http://localhost:8888
+PRINT_PHPMYADMIN = phpMyAdmin: http://localhost:4444
 
 ##################
 # Docker compose
@@ -40,25 +43,30 @@ restart:
 ##################
 
 php:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm bash
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC} bash
+
+#################
+# Test
+#################
 
 # all tests
 test:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm php vendor/bin/phpunit
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC} php vendor/bin/phpunit
 
 # Unit test
 test_u:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm php vendor/bin/phpunit ./tests/Unit
-
-node:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm curl -sL https://deb.nodesource.com/setup_18.x | bash
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC} php vendor/bin/phpunit ./tests/Unit
 
 composer:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm composer install
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC} composer install
 
+
+#################
+# NodeJs npm
+#################
 npm:
-	${DOCKER_COMPOSE} exec -u www-data php-fpm npm install
-	${DOCKER_COMPOSE} exec -u www-data php-fpm npm run build
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC}  npm install
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC}  npm run build
 
 npmd:
 	npm run dev
@@ -74,43 +82,23 @@ npm_local:
 ##################
 
 db_migrate:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} php artisan migrate
-
-##################
-# Static code analysis
-##################
-
-phpstan:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/phpstan analyse src tests -c phpstan.neon
-
-deptrac:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/deptrac analyze deptrac-layers.yaml
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/deptrac analyze deptrac-modules.yaml
-
-cs_fix:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/php-cs-fixer fix
-
-cs_fix_diff:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/php-cs-fixer fix --dry-run --diff
+	${DOCKER_COMPOSE} ${DOCKER_COMPOSE_EXEC} php artisan migrate
 
 #################
 #  Deployment
 #################
 dep:
-	make build pause5 up pause4 composer npm pause60 db_migrate wprint
+	make build up composer npm pause10 db_migrate print
 
 #################
 # pause
 #################
 
-pause60:
-	sleep 60
+pause10:
+	sleep 10
 
-pause5:
-	sleep 5
-
-pause4:
-	sleep 4
-
-wprint:
-	@echo ${WELCOME}
+print:
+	@echo ${PRINT_SEPARATOR}
+	@echo ${PRINT_WELCOME}
+	@echo ${PRINT_PHPMYADMIN}
+	@echo ${PRINT_SEPARATOR}
