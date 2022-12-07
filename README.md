@@ -1,6 +1,8 @@
 ### SPA Application Laravel+Vue
+Simple spa application, releases crud
+
 The project needs to be pinked on a Linux or Windows (wsl2 Unbuntu 20.04) platform.
-Docker must be installed
+Docker, make must be installed
 ## Deployment
 
 ```bash
