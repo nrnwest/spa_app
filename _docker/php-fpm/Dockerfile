@@ -1,4 +1,4 @@
-FROM php:8.1.0-fpm-alpine
+FROM php:8.1.4-fpm-alpine3.15
 
 # Install packages
 RUN apk add --no-cache git curl build-base zlib-dev oniguruma-dev autoconf bash
@@ -7,6 +7,13 @@ COPY ./_docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Postgres && Mysql
 RUN apk add --no-cache libpq-dev && docker-php-ext-install pdo_pgsql && docker-php-ext-install pdo_mysql
+
+# Xdebug error!!!!
+ARG INSTALL_XDEBUG=false
+RUN if [ ${INSTALL_XDEBUG} = true ]; \
+    then \
+      pecl install xdebug && docker-php-ext-enable xdebug; \
+    fi; \
 
 # node js
 RUN apk add --update nodejs npm
